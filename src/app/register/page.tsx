@@ -12,14 +12,47 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("")
   const [role, setRole] = useState("user")
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    console.log("REGISTER CLICKED") // 🔥 debug
+
     if (!name || !tel || !email || !password) {
       alert("Please fill all fields")
       return
     }
 
-    alert("Register success ✅")
-    router.push("/login")
+    try {
+      const res = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            tel,
+            email,
+            password,
+            role,
+          }),
+        }
+      )
+
+      const data = await res.json()
+      console.log("REGISTER RESPONSE:", data)
+
+      if (!res.ok) {
+        alert(data.message || "Register failed")
+        return
+      }
+
+      alert("Register success ✅")
+      router.push("/login")
+
+    } catch (err) {
+      console.log("REGISTER ERROR:", err)
+      alert("Error")
+    }
   }
 
   return (
@@ -45,7 +78,6 @@ export default function RegisterPage() {
 
         <label className="text-lg">Name</label>
         <input
-          type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full h-[66px] bg-gray-200 border border-gray-500 rounded-lg px-4 mb-6"
@@ -53,7 +85,6 @@ export default function RegisterPage() {
 
         <label className="text-lg">Telephone</label>
         <input
-          type="text"
           value={tel}
           onChange={(e) => setTel(e.target.value)}
           className="w-full h-[66px] bg-gray-200 border border-gray-500 rounded-lg px-4 mb-6"
@@ -61,7 +92,6 @@ export default function RegisterPage() {
 
         <label className="text-lg">Email</label>
         <input
-          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full h-[66px] bg-gray-200 border border-gray-500 rounded-lg px-4 mb-6"
@@ -87,7 +117,7 @@ export default function RegisterPage() {
 
         <button
           onClick={handleRegister}
-          className="w-full h-[66px] bg-blue-900 text-white text-xl rounded-lg hover:bg-blue-800"
+          className="w-full h-[66px] bg-blue-900 text-white text-xl rounded-lg"
         >
           Create Account
         </button>

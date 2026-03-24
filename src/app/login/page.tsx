@@ -12,6 +12,8 @@ export default function LoginPage() {
   const router = useRouter()
 
   const handleLogin = async () => {
+    console.log("LOGIN CLICKED") // 🔥 debug
+
     if (!email || !password) {
       alert("Please Fill Information")
       return
@@ -20,13 +22,29 @@ export default function LoginPage() {
     try {
       const res = await login(email, password)
 
-      localStorage.setItem("token", res.token)
-      localStorage.setItem("role", res.role)
+      console.log("LOGIN RESPONSE:", res) // 🔥 debug
 
-      setUser({ token: res.token, role: res.role })
+      // ✅ backend มักจะส่งแบบนี้
+      // { success: true, token: "...", data: { role: ... } }
 
+      const token = res.token || res.data?.token
+      const role = res.role || res.data?.role || "user"
+
+      if (!token) {
+        alert("Login failed: no token")
+        return
+      }
+
+      localStorage.setItem("token", token)
+      localStorage.setItem("role", role)
+
+      setUser({ token, role })
+
+      alert("Login success 🚀")
       router.push("/")
-    } catch {
+
+    } catch (err: any) {
+      console.log("LOGIN ERROR:", err)
       alert("Login failed")
     }
   }
