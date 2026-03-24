@@ -3,7 +3,7 @@
 import { Calendar } from "lucide-react"
 
 export default function myReservation() {
-  const reservations: any[] = [] // mock (ยังไม่มีข้อมูล)
+  const reservations: any[] = [] 
 
   return (
     <div className="min-h-screen bg-background px-6 py-10">
