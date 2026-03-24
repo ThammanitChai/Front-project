@@ -11,7 +11,7 @@ export default function Features () {
           ].map(({ icon: Icon, title, desc }) => (
             <div key={title} className="text-center">
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-slate-400">
-                <Icon className="h-6 w-6 text-primary" />
+                <Icon className="h-6 w-6 text-white" />
               </div>
               <h3 className="font-display text-xl font-semibold text-foreground">{title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
