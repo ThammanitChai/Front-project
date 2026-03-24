@@ -1,132 +1,47 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+"use client";
 
-// ==================== AUTH ====================
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { login } from "@/lib/api";
 
-// ✅ LOGIN
-export const login = async (email: string, password: string) => {
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
+export default function LoginPage() {   // ✅ ต้องมี default
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setUser } = useAuth();
+  const router = useRouter();
 
-  const data = await res.json();
+  const handleLogin = async () => {
+    try {
+      const res = await login(email, password);
 
-  if (!res.ok) {
-    throw new Error(data.error || "Login failed");
-  }
+      localStorage.setItem("token", res.token);
+      setUser({ token: res.token });
 
-  return data; // { success, token }
-};
-
-// ✅ REGISTER
-export const register = async (
-  name: string,
-  tel: string,
-  email: string,
-  password: string
-) => {
-  const res = await fetch(`${API_URL}/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ name, tel, email, password }),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.error || "Register failed");
-  }
-
-  return data;
-};
-
-// ==================== USER ====================
-
-// ✅ GET ME (ต้องมี token)
-export const getMe = async () => {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(`${API_URL}/auth/me`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error("Unauthorized");
-  }
-
-  return data;
-};
-
-// ==================== SPACES ====================
-
-// ✅ GET ALL SPACES
-export const getSpaces = async () => {
-  const res = await fetch(`${API_URL}/spaces`);
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch spaces");
-  }
-
-  return data;
-};
-
-// ✅ CREATE SPACE (ต้องมี token)
-export const createSpace = async (spaceData: any) => {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(`${API_URL}/spaces`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(spaceData),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error("Failed to create space");
-  }
-
-  return data;
-};
-
-// ==================== RESERVATIONS ====================
-
-// ✅ CREATE RESERVATION
-export const createReservation = async (spaceId: string, reservationData: any) => {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(
-    `${API_URL}/spaces/${spaceId}/reservations`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(reservationData),
+      router.push("/");
+    } catch (err: any) {
+      alert(err.message || "Login failed");
     }
+  };
+
+  return (
+    <div>
+      <h1>Login</h1>
+
+      <input
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="email"
+      />
+
+      <input
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="password"
+        type="password"
+      />
+
+      <button onClick={handleLogin}>Login</button>
+    </div>
   );
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error("Failed to create reservation");
-  }
-
-  return data;
-};
+}
