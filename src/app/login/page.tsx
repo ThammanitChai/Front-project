@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert("กรอกข้อมูลให้ครบ")
+      alert("Please Fill Information")
       return
     }
 
@@ -34,7 +34,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-white pt-24">
 
-      {/* Title */}
       <h1 className="text-5xl font-bold mb-4">
         SpaceFlow
       </h1>
@@ -43,7 +42,6 @@ export default function LoginPage() {
         Book your perfect co-working spot
       </p>
 
-      {/* Card */}
       <div className="w-[690px] border border-gray-300 rounded-xl p-10 shadow-sm">
 
         <h2 className="text-3xl font-bold text-center mb-2">
@@ -54,7 +52,6 @@ export default function LoginPage() {
           Enter your credentials to continue
         </p>
 
-        {/* Email */}
         <label className="text-lg">Email</label>
         <input
           type="email"
@@ -63,7 +60,6 @@ export default function LoginPage() {
           className="w-full h-[66px] bg-gray-200 border border-gray-500 rounded-lg px-4 mb-6"
         />
 
-        {/* Password */}
         <label className="text-lg">Password</label>
         <input
           type="password"
@@ -72,7 +68,6 @@ export default function LoginPage() {
           className="w-full h-[66px] bg-gray-200 border border-gray-500 rounded-lg px-4 mb-8"
         />
 
-        {/* Button */}
         <button
           onClick={handleLogin}
           className="w-full h-[66px] bg-blue-900 text-white text-xl rounded-lg hover:bg-blue-800"
@@ -80,7 +75,6 @@ export default function LoginPage() {
           Log in
         </button>
 
-        {/* Register */}
         <p className="text-center text-gray-500 mt-6">
           Don’t have an account?{" "}
           <span
