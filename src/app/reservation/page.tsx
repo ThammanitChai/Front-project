@@ -1,36 +1,50 @@
-'use client'
+"use client"
 
-import { Calendar } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useAuth } from "@/context/AuthContext"
+import ProtectedRoute from "@/components/ProtectedRoute"
+import {
+  getMyReservations,
+  deleteReservation
+} from "@/lib/api"
 
-export default function myReservation() {
-  const reservations: any[] = [] 
+export default function ReservationPage() {
+  const { user } = useAuth()
+  const [data, setData] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!user) return
+
+    getMyReservations(user.token)
+      .then(setData)
+      .catch(() => alert("โหลดข้อมูลไม่ได้"))
+      .finally(() => setLoading(false))
+  }, [user])
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteReservation(id, user.token)
+      setData(prev => prev.filter(item => item._id !== id))
+    } catch {
+      alert("ลบไม่สำเร็จ")
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-background px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-5xl font-bold text-foreground">
-          My Reservations
-        </h1>
-        <p className="mt-2 text-xl text-gray-400">
-          {reservations.length}/3 reservations used
-        </p>
-      </div>
+    <ProtectedRoute>
+      <div>
+        <h1>My Reservations</h1>
 
-      {reservations.length === 0 && (
-        <div className="flex h-[300px] flex-col items-center justify-center rounded-xl border border-dashed border-gray-500 bg-gray-300 text-center">
-          
-          <div className="mb-4">
-            <Calendar className="h-10 w-10 text-gray-400" />
+        {loading && <p>Loading...</p>}
+
+        {data.map(r => (
+          <div key={r._id}>
+            <p>{r.name}</p>
+            <button onClick={() => handleDelete(r._id)}>Delete</button>
           </div>
-
-          <h2 className="text-lg font-semibold text-gray-700">
-            No reservations yet
-          </h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Browse co-working spaces to make your first booking
-          </p>
-        </div>
-      )}
-    </div>
+        ))}
+      </div>
+    </ProtectedRoute>
   )
 }

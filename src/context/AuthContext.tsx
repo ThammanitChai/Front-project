@@ -1,24 +1,34 @@
 "use client"
 
-import { createContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
-export const AuthContext = createContext<any>(null)
+type User = {
+  token: string
+  role: string
+} | null
 
-export function AuthProvider({ children }: any) {
-  const [user, setUser] = useState<any>(null)
+const AuthContext = createContext<any>(null)
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem("token")
     const role = localStorage.getItem("role")
 
-    if (token) {
+    if (token && role) {
       setUser({ token, role })
     }
+
+    setLoading(false)
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   )
 }
+
+export const useAuth = () => useContext(AuthContext)

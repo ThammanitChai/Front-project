@@ -1,81 +1,97 @@
 "use client"
 
-import { useState, useContext } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { TextField } from "@mui/material"
-import Link from "next/link"
-import { AuthContext } from "@/context/AuthContext"
+import { useAuth } from "@/context/AuthContext"
+import { login } from "@/lib/api"
 
-export default function Login() {
+export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const { setUser } = useAuth()
   const router = useRouter()
-  const { setUser } = useContext(AuthContext)
 
-  const handleLogin = async (e: any) => {
-    e.preventDefault()
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("กรอกข้อมูลให้ครบ")
+      return
+    }
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-      })
+      const res = await login(email, password)
 
-      const data = await res.json()
+      localStorage.setItem("token", res.token)
+      localStorage.setItem("role", res.role)
 
-      // 🔥 เก็บ token + role
-      localStorage.setItem("token", data.token)
-      localStorage.setItem("role", data.role)
+      setUser({ token: res.token, role: res.role })
 
-      // 🔥 update context ทันที
-      setUser({ token: data.token, role: data.role })
-
-      router.push("/spaces")
-
-    } catch (err) {
+      router.push("/")
+    } catch {
       alert("Login failed")
     }
   }
 
   return (
-    <main className="w-full flex flex-col items-center justify-center mt-10">
-      <div className="text-5xl font-bold">SpaceFlow</div>
-      <div className="mt-3">Book your perfect co-working spot</div>
+    <div className="min-h-screen flex flex-col items-center justify-start bg-white pt-24">
 
-      <form onSubmit={handleLogin} className="flex flex-col items-center gap-6 mt-8">
-        <div className="text-2xl font-bold">Log in</div>
+      {/* Title */}
+      <h1 className="text-5xl font-bold mb-4">
+        SpaceFlow
+      </h1>
 
-        <TextField
-          className="w-[20vw]"
-          variant="standard"
-          label="Email"
+      <p className="text-gray-500 text-xl mb-10">
+        Book your perfect co-working spot
+      </p>
+
+      {/* Card */}
+      <div className="w-[690px] border border-gray-300 rounded-xl p-10 shadow-sm">
+
+        <h2 className="text-3xl font-bold text-center mb-2">
+          Log in
+        </h2>
+
+        <p className="text-center text-gray-500 mb-8">
+          Enter your credentials to continue
+        </p>
+
+        {/* Email */}
+        <label className="text-lg">Email</label>
+        <input
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="w-full h-[66px] bg-gray-200 border border-gray-500 rounded-lg px-4 mb-6"
         />
 
-        <TextField
-          className="w-[20vw]"
-          variant="standard"
-          label="Password"
+        {/* Password */}
+        <label className="text-lg">Password</label>
+        <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="w-full h-[66px] bg-gray-200 border border-gray-500 rounded-lg px-4 mb-8"
         />
 
-        <Link href="/register" className="text-blue-700">
-          Don't have an account yet?
-        </Link>
-
+        {/* Button */}
         <button
-          type="submit"
-          className="bg-sky-700 text-white w-[20vw] h-12 rounded-lg"
+          onClick={handleLogin}
+          className="w-full h-[66px] bg-blue-900 text-white text-xl rounded-lg hover:bg-blue-800"
         >
           Log in
         </button>
-      </form>
-    </main>
+
+        {/* Register */}
+        <p className="text-center text-gray-500 mt-6">
+          Don’t have an account?{" "}
+          <span
+            className="underline cursor-pointer"
+            onClick={() => router.push("/register")}
+          >
+            Register
+          </span>
+        </p>
+
+      </div>
+    </div>
   )
 }
