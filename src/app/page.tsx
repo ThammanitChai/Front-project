@@ -8,27 +8,6 @@ export default function Home() {
   return (
     <div className="w-full min-h-screen bg-white">
 
-      {/* NAVBAR */}
-      <div className="flex justify-between items-center px-16 py-4 shadow-sm">
-        <h1 className="text-3xl font-bold">SpaceFlow</h1>
-
-        <div className="flex gap-6 items-center">
-          <button
-            onClick={() => router.push("/login")}
-            className="text-blue-900 text-lg"
-          >
-            Sign In
-          </button>
-
-          <button
-            onClick={() => router.push("/register")}
-            className="bg-blue-900 text-white px-6 py-2 rounded-lg"
-          >
-            Get Started
-          </button>
-        </div>
-      </div>
-
       {/* HERO */}
       <div
         className="relative w-full h-[600px] flex flex-col items-center justify-center text-center"
