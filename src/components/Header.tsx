@@ -9,6 +9,7 @@ export default function Header() {
   const { user, setUser } = useAuth()
   const router = useRouter()
 
+
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("role")
