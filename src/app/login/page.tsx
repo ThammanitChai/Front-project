@@ -1,14 +1,29 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import { Wifi, Coffee, Users, MapPin, CalendarDays,  ArrowRight } from "lucide-react"
+import Link from "next/link";
+import { Wifi, Coffee, Users, MapPin, CalendarDays, ArrowRight } from "lucide-react";
 
 export default function Home() {
-  const router = useRouter()
-
   return (
     <div className="w-full min-h-screen bg-white">
 
+      {/* NAVBAR */}
+      <div className="w-full flex justify-between items-center px-10 py-5 border-b">
+        <h1 className="text-2xl font-bold">SpaceFlow</h1>
+
+        <div className="flex gap-6">
+          <Link href="/login" className="text-blue-600 font-medium">
+            Login
+          </Link>
+
+          <Link
+            href="/register"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+          >
+            Get Started
+          </Link>
+        </div>
+      </div>
 
       {/* HERO */}
       <div
@@ -19,7 +34,8 @@ export default function Home() {
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-black/50"></div>
+        {/* overlay (ไม่บล็อก click) */}
+        <div className="absolute inset-0 bg-black/50 pointer-events-none"></div>
 
         <div className="relative z-10 text-white px-4">
           <h1 className="text-6xl font-bold mb-6">
@@ -31,19 +47,19 @@ export default function Home() {
           </p>
 
           <div className="flex gap-6 justify-center">
-            <button
-              onClick={() => router.push("/reservation")}
+            <Link
+              href="/reservation"
               className="bg-blue-900 px-8 py-4 rounded-lg text-lg"
             >
               Reserve Now
-            </button>
+            </Link>
 
-            <button
-              onClick={() => router.push("/browse")}
+            <Link
+              href="/browse"
               className="bg-gray-400 px-8 py-4 rounded-lg text-lg"
             >
               Browse Spaces
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -51,19 +67,25 @@ export default function Home() {
       {/* FEATURES */}
       <div className="py-16 grid grid-cols-1 md:grid-cols-3 gap-10 text-center px-10">
         <div>
-          <div className="w-16 h-16 bg-gray-300 mx-auto rounded-lg mb-4 flex items-center justify-center"><Wifi className="text-white w-9 h-9" /></div>
+          <div className="w-16 h-16 bg-gray-300 mx-auto rounded-lg mb-4 flex items-center justify-center">
+            <Wifi className="text-white w-9 h-9" />
+          </div>
           <h3 className="text-xl font-bold">High-Speed WiFi</h3>
           <p className="text-gray-600">Blazing fast internet for all your needs</p>
         </div>
 
         <div>
-          <div className="w-16 h-16 bg-gray-300 mx-auto rounded-lg mb-4 flex items-center justify-center"><Coffee className="text-white w-10 h-10" /></div>
+          <div className="w-16 h-16 bg-gray-300 mx-auto rounded-lg mb-4 flex items-center justify-center">
+            <Coffee className="text-white w-10 h-10" />
+          </div>
           <h3 className="text-xl font-bold">Free Amenities</h3>
           <p className="text-gray-600">Coffee, snacks, and printing included</p>
         </div>
 
         <div>
-          <div className="w-16 h-16 bg-gray-300 mx-auto rounded-lg mb-4 flex items-center justify-center"><Users className="text-white w-9 h-9" /></div>
+          <div className="w-16 h-16 bg-gray-300 mx-auto rounded-lg mb-4 flex items-center justify-center">
+            <Users className="text-white w-9 h-9" />
+          </div>
           <h3 className="text-xl font-bold">Community</h3>
           <p className="text-gray-600">Network with like-minded professionals</p>
         </div>
@@ -77,7 +99,9 @@ export default function Home() {
 
           <div className="border border-gray-300 p-6 rounded-xl">
             <div className="text-4xl font-bold text-gray-300 mb-2">01</div>
-            <div className="w-12 h-12 bg-gray-300 mx-auto rounded-full mb-4 flex justify-center items-center"><MapPin className="w-7 h-7" /></div>
+            <div className="w-12 h-12 bg-gray-300 mx-auto rounded-full mb-4 flex justify-center items-center">
+              <MapPin className="w-7 h-7" />
+            </div>
             <h3 className="font-bold text-lg mb-2">Browse Spaces</h3>
             <p className="text-gray-500">
               Explore our curated list of co-working locations across the city.
@@ -86,7 +110,9 @@ export default function Home() {
 
           <div className="border border-gray-300 p-6 rounded-xl">
             <div className="text-4xl font-bold text-gray-300 mb-2">02</div>
-            <div className="w-12 h-12 bg-gray-300 mx-auto rounded-full mb-4 flex justify-center items-center"><CalendarDays className="w-7 h-7" /></div>
+            <div className="w-12 h-12 bg-gray-300 mx-auto rounded-full mb-4 flex justify-center items-center">
+              <CalendarDays className="w-7 h-7" />
+            </div>
             <h3 className="font-bold text-lg mb-2">Reserve a Spot</h3>
             <p className="text-gray-500">
               Pick your preferred date and time, then book instantly online.
@@ -95,7 +121,9 @@ export default function Home() {
 
           <div className="border border-gray-300 p-6 rounded-xl">
             <div className="text-4xl font-bold text-gray-300 mb-2">03</div>
-            <div className="w-12 h-12 bg-gray-300 mx-auto rounded-full mb-4 flex justify-center items-center"><ArrowRight className="w-7 h-7" /></div>
+            <div className="w-12 h-12 bg-gray-300 mx-auto rounded-full mb-4 flex justify-center items-center">
+              <ArrowRight className="w-7 h-7" />
+            </div>
             <h3 className="font-bold text-lg mb-2">Show Up & Work</h3>
             <p className="text-gray-500">
               Arrive at your reserved space and enjoy a productive day.
@@ -104,12 +132,12 @@ export default function Home() {
 
         </div>
 
-        <button
-          onClick={() => router.push("/register")}
-          className="mt-10 bg-blue-900 text-white px-8 py-3 rounded-lg"
+        <Link
+          href="/register"
+          className="mt-10 inline-block bg-blue-900 text-white px-8 py-3 rounded-lg"
         >
           Get Started
-        </button>
+        </Link>
       </div>
 
       {/* FOOTER */}
@@ -125,8 +153,14 @@ export default function Home() {
 
           <div>
             <h3 className="font-bold text-xl mb-2">Quick Links</h3>
-            <p className="text-gray-300 cursor-pointer" onClick={() => router.push("/login")}>Log in</p>
-            <p className="text-gray-300 cursor-pointer" onClick={() => router.push("/register")}>Register</p>
+
+            <Link href="/login" className="block text-gray-300">
+              Log in
+            </Link>
+
+            <Link href="/register" className="block text-gray-300">
+              Register
+            </Link>
           </div>
 
           <div>
@@ -138,7 +172,6 @@ export default function Home() {
 
         </div>
       </div>
-
     </div>
-  )
+  );
 }
