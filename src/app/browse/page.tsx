@@ -1,20 +1,36 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import SpaceCardPanel from "@/components/SpacePanel"
 import { useAuth } from "@/context/AuthContext"
 import { createReservation } from "@/lib/api"
 
 type Space = {
-  id: string
+  _id: string
   name: string
+  address: string
+  tel: string
+  openTime: string
+  closeTime: string
 }
 
 export default function BrowsePage() {
   const { user } = useAuth()
 
+  const [spaces, setSpaces] = useState<Space[]>([])
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null)
   const [date, setDate] = useState("")
+
+  // 🔥 โหลด spaces จาก backend
+  useEffect(() => {
+    fetch("https://project-backend-production-5f11.up.railway.app/api/v1/spaces")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("SPACES:", data)
+        setSpaces(data.data || [])
+      })
+      .catch(() => alert("โหลด spaces ไม่ได้"))
+  }, [])
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-10">
@@ -32,41 +48,20 @@ export default function BrowsePage() {
       {/* SPACE LIST */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-        <SpaceCardPanel 
-          spaceName="GoodHub"
-          spaceImg="/space1.jpg"
-          spaceLocate="123 Innovation Drive"
-          spaceOPCL="06:00 - 00:00"
-          spaceTel="098-567-3214"
-          onBook={() => setSelectedSpace({
-            id: "69c33fb95c1277b0e413a6ac", 
-            name: "GoodHub"
-          })}
-        />
-
-        <SpaceCardPanel 
-          spaceName="ThinkSpace"
-          spaceImg="/space2.jpg"
-          spaceLocate="456 Creative Blvd"
-          spaceOPCL="24 HRS"
-          spaceTel="087-656-4537"
-          onBook={() => setSelectedSpace({
-            id: "69c33fd85c1277b0e413a6af",
-            name: "ThinkSpace"
-          })}
-        />
-
-        <SpaceCardPanel 
-          spaceName="9 OClock Square"
-          spaceImg="/space3.jpg"
-          spaceLocate="789 Startup Lane"
-          spaceOPCL="07:00 - 23:00"
-          spaceTel="065-346-2123"
-          onBook={() => setSelectedSpace({
-            id: "69c33ff55c1277b0e413a6b2",
-            name: "9 OClock Square"
-          })}
-        />
+        {spaces.map((space) => (
+          <SpaceCardPanel
+            key={space._id}
+            spaceName={space.name}
+            spaceImg="/space1.jpg" // เปลี่ยนเป็น dynamic ได้ทีหลัง
+            spaceLocate={space.address}
+            spaceOPCL={`${space.openTime} - ${space.closeTime}`}
+            spaceTel={space.tel}
+            onBook={() => {
+              console.log("SELECT:", space._id)
+              setSelectedSpace(space)
+            }}
+          />
+        ))}
 
       </div>
 
@@ -100,6 +95,7 @@ export default function BrowsePage() {
 
             <div className="flex justify-end gap-3">
 
+              {/* CANCEL */}
               <button
                 onClick={() => {
                   setSelectedSpace(null)
@@ -110,6 +106,7 @@ export default function BrowsePage() {
                 Cancel
               </button>
 
+              {/* CONFIRM */}
               <button
                 onClick={async () => {
                   if (!date) {
@@ -124,16 +121,16 @@ export default function BrowsePage() {
 
                   try {
                     console.log("SEND:", {
-                      spaceId: selectedSpace.id,
-                      reservationDate: date
+                      spaceId: selectedSpace._id,
+                      date
                     })
 
                     await createReservation(
-                      selectedSpace.id,
+                      selectedSpace._id,   // 🔥 ถูกต้อง 100%
                       {
                         reservationDate: new Date(date + "T00:00:00").toISOString(),
                       },
-                      user.token 
+                      user.token
                     )
 
                     alert("Reservation success ✅")
@@ -142,7 +139,7 @@ export default function BrowsePage() {
                     setDate("")
 
                   } catch (err: any) {
-                    console.log("RESERVE ERROR:", err)
+                    console.log("ERROR:", err)
                     alert(err.message || "Reservation failed")
                   }
                 }}
