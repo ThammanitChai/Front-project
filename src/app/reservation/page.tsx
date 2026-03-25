@@ -14,7 +14,7 @@ export default function ReservationPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!user || !user.token) {
+    if (!user?.token) {
       setLoading(false)
       return
     }
@@ -23,12 +23,7 @@ export default function ReservationPage() {
       .then((res) => {
         console.log("RESERVATION RESPONSE:", res)
 
-        // ✅ รองรับทั้ง 2 แบบ
-        if (Array.isArray(res)) {
-          setData(res)
-        } else {
-          setData(res.data || [])
-        }
+        setData(res.data || [])
       })
       .catch((err) => {
         console.log("ERROR:", err)
@@ -63,7 +58,7 @@ export default function ReservationPage() {
 
         {data.map((r) => (
           <div key={r._id} style={{ marginBottom: 10 }}>
-            <p>{r.name || r.space?.name || "No name"}</p>
+            <p>{r.name || r.coworkingSpace?.name || "No name"}</p>
 
             <button onClick={() => handleDelete(r._id)}>
               Delete

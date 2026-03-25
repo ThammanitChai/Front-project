@@ -69,16 +69,29 @@ export async function getMyReservations(token: string) {
 }
 
 export async function createReservation(spaceId: string, data: any, token: string) {
-  return fetch(`${BASE_URL}/spaces/${spaceId}/reservations`, {  
+  if (!spaceId) {
+    throw new Error("Missing spaceId ❌")
+  }
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/spaces/${spaceId}/reservations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
-  }).then(handleResponse);
-}
+  });
 
+  const result = await res.json();
+
+  console.log("CREATE RESERVATION:", result); // 🔥 debug
+
+  if (!res.ok) {
+    throw new Error(result.message || "Create failed");
+  }
+
+  return result;
+}
 export async function updateReservation(id: string, data: any, token: string) {
   return apiFetch(`${BASE_URL}/reservations/${id}`, {
     method: "PUT",
