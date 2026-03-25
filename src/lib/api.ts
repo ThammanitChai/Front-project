@@ -68,19 +68,15 @@ export async function getMyReservations(token: string) {
   });
 }
 
-export async function createReservation(
-  spaceId: string,
-  data: any,
-  token: string
-) {
-  return apiFetch(`${BASE_URL}/coworkingSpaces/${spaceId}/reservations`, {
+export async function createReservation(spaceId: string, data: any, token: string) {
+  return fetch(`${BASE_URL}/spaces/${spaceId}/reservations`, {  
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
-  });
+  }).then(handleResponse);
 }
 
 export async function updateReservation(id: string, data: any, token: string) {
