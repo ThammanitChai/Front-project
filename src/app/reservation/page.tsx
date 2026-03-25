@@ -14,34 +14,60 @@ export default function ReservationPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!user) return
+    if (!user || !user.token) {
+      setLoading(false)
+      return
+    }
 
     getMyReservations(user.token)
-      .then(setData)
-      .catch(() => alert("โหลดข้อมูลไม่ได้"))
+      .then((res) => {
+        console.log("RESERVATION RESPONSE:", res)
+
+        // ✅ รองรับทั้ง 2 แบบ
+        if (Array.isArray(res)) {
+          setData(res)
+        } else {
+          setData(res.data || [])
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR:", err)
+        alert("โหลดข้อมูลไม่ได้")
+      })
       .finally(() => setLoading(false))
+
   }, [user])
 
   const handleDelete = async (id: string) => {
+    if (!user?.token) return
+
     try {
       await deleteReservation(id, user.token)
       setData(prev => prev.filter(item => item._id !== id))
-    } catch {
+    } catch (err) {
+      console.log("DELETE ERROR:", err)
       alert("ลบไม่สำเร็จ")
     }
   }
 
   return (
     <ProtectedRoute>
-      <div>
+      <div style={{ padding: 20 }}>
         <h1>My Reservations</h1>
 
         {loading && <p>Loading...</p>}
 
-        {data.map(r => (
-          <div key={r._id}>
-            <p>{r.name}</p>
-            <button onClick={() => handleDelete(r._id)}>Delete</button>
+        {!loading && data.length === 0 && (
+          <p>No reservations found</p>
+        )}
+
+        {data.map((r) => (
+          <div key={r._id} style={{ marginBottom: 10 }}>
+            <p>{r.name || r.space?.name || "No name"}</p>
+
+            <button onClick={() => handleDelete(r._id)}>
+              Delete
+            </button>
           </div>
         ))}
       </div>
