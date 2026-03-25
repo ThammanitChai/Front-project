@@ -73,7 +73,7 @@ export async function createReservation(spaceId: string, data: any, token: strin
     throw new Error("Missing spaceId ❌")
   }
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/spaces/${spaceId}/reservations`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/coworkingSpaces/${spaceId}/reservations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

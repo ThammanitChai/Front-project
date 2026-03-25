@@ -39,7 +39,7 @@ export default function BrowsePage() {
           spaceOPCL="06:00 - 00:00"
           spaceTel="098-567-3214"
           onBook={() => setSelectedSpace({
-            id: "67e2a4b9c8d1f123456789ab", // 🔥 ObjectId จริงจาก Mongo
+            id: "69c33fb95c1277b0e413a6ac", 
             name: "GoodHub"
           })}
         />
@@ -51,7 +51,7 @@ export default function BrowsePage() {
           spaceOPCL="24 HRS"
           spaceTel="087-656-4537"
           onBook={() => setSelectedSpace({
-            id: "67e2a4b9c8d1f123456789ac",
+            id: "69c33fd85c1277b0e413a6af",
             name: "ThinkSpace"
           })}
         />
@@ -63,7 +63,7 @@ export default function BrowsePage() {
           spaceOPCL="07:00 - 23:00"
           spaceTel="065-346-2123"
           onBook={() => setSelectedSpace({
-            id: "67e2a4b9c8d1f123456789ad",
+            id: "69c33ff55c1277b0e413a6b2",
             name: "9 OClock Square"
           })}
         />
