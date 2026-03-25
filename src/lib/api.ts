@@ -1,82 +1,112 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-function handleResponse(res: Response) {
-  return res.json().then((data) => {
-    if (!res.ok) {
-      throw new Error(data.error || "API Error");
-    }
-    return data;
-  });
+if (!BASE_URL) {
+  console.error("❌ NEXT_PUBLIC_API_URL is missing");
 }
 
-// AUTH
-export async function login(email: string, password: string) {
-  console.log("API URL:", BASE_URL);
+// 🔥 handle response แบบกันพัง
+async function handleResponse(res: Response) {
+  let data;
 
-  return fetch(`${BASE_URL}/auth/login`, {
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error("Invalid server response");
+  }
+
+  if (!res.ok) {
+    throw new Error(data.error || data.message || "API Error");
+  }
+
+  return data;
+}
+
+// 🔥 helper fetch (มี debug)
+async function apiFetch(url: string, options: RequestInit) {
+  console.log("➡️ REQUEST:", url, options);
+
+  const res = await fetch(url, options);
+
+  console.log("⬅️ STATUS:", res.status);
+
+  return handleResponse(res);
+}
+
+/* =======================
+   AUTH
+======================= */
+
+export async function login(email: string, password: string) {
+  return apiFetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
-  }).then(handleResponse);
+  });
 }
 
 export async function register(data: any) {
-  return fetch(`${BASE_URL}/auth/register`, {
+  return apiFetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then(handleResponse);
+  });
 }
 
-// RESERVATION CRUD
+/* =======================
+   RESERVATIONS
+======================= */
+
 export async function getMyReservations(token: string) {
-  return fetch(`${BASE_URL}/reservations`, {
+  return apiFetch(`${BASE_URL}/reservations`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }).then(handleResponse);
+  });
 }
 
 export async function createReservation(data: any, token: string) {
-  return fetch(`${BASE_URL}/reservations`, {
+  return apiFetch(`${BASE_URL}/reservations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
-  }).then(handleResponse);
+  });
 }
 
 export async function updateReservation(id: string, data: any, token: string) {
-  return fetch(`${BASE_URL}/reservations/${id}`, {
+  return apiFetch(`${BASE_URL}/reservations/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
-  }).then(handleResponse);
+  });
 }
 
 export async function deleteReservation(id: string, token: string) {
-  return fetch(`${BASE_URL}/reservations/${id}`, {
+  return apiFetch(`${BASE_URL}/reservations/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }).then(handleResponse);
+  });
 }
 
-// ADMIN
+/* =======================
+   ADMIN
+======================= */
+
 export async function getAllReservations(token: string) {
-  return fetch(`${BASE_URL}/reservations`, {
+  return apiFetch(`${BASE_URL}/reservations`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }).then(handleResponse);
+  });
 }
