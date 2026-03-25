@@ -69,11 +69,7 @@ export async function getMyReservations(token: string) {
 }
 
 export async function createReservation(spaceId: string, data: any, token: string) {
-  if (!spaceId) {
-    throw new Error("Missing spaceId ❌")
-  }
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/coworkingSpaces/${spaceId}/reservations`, {
+  const res = await fetch(`${BASE_URL}/coworkingSpaces/${spaceId}/reservations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -84,14 +80,13 @@ export async function createReservation(spaceId: string, data: any, token: strin
 
   const result = await res.json();
 
-  console.log("CREATE RESERVATION:", result); // 🔥 debug
-
   if (!res.ok) {
     throw new Error(result.message || "Create failed");
   }
 
   return result;
 }
+
 export async function updateReservation(id: string, data: any, token: string) {
   return apiFetch(`${BASE_URL}/reservations/${id}`, {
     method: "PUT",
