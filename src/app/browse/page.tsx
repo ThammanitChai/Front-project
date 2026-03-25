@@ -129,11 +129,11 @@ export default function BrowsePage() {
                     })
 
                     await createReservation(
-                      selectedSpace.id, // 🔥 ตัวที่ 1
+                      selectedSpace.id,
                       {
-                        reservationDate: new Date(date).toISOString(),
+                        reservationDate: new Date(date + "T00:00:00").toISOString(),
                       },
-                      user.token // 🔥 ตัวที่ 3
+                      user.token 
                     )
 
                     alert("Reservation success ✅")
