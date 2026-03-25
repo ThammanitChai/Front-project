@@ -17,19 +17,26 @@ export default function AdminPage() {
       return
     }
 
-    getAllReservations(user.token).then(setData)
+    getAllReservations(user.token)
+      .then(setData)
+      .catch((err) => {
+        console.error("API ERROR:", err)
+      })
   }, [user])
+
+  if (!user) return <p>Loading...</p>
 
   return (
     <ProtectedRoute>
       <div>
         <h1>Admin Panel</h1>
 
-        {data.map(r => (
-          <div key={r._id}>
-            <p>{r.name}</p>
-          </div>
-        ))}
+        {Array.isArray(data) &&
+          data.map((r) => (
+            <div key={r._id}>
+              <p>{r.name}</p>
+            </div>
+          ))}
       </div>
     </ProtectedRoute>
   )
