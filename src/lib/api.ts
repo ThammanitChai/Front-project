@@ -69,7 +69,7 @@ export async function getMyReservations(token: string) {
 }
 
 export async function createReservation(spaceId: string, data: any, token: string) {
-  const res = await fetch(`${BASE_URL}/coworkingSpaces/${spaceId}/reservations`, {
+  const res = await fetch(`${BASE_URL}/spaces/${spaceId}/reservations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
