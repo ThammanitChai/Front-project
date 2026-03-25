@@ -58,8 +58,7 @@ export default function ReservationPage() {
 
         {data.map((r) => (
           <div key={r._id} style={{ marginBottom: 10 }}>
-            <p>{r.coworkingSpace?.name || "No name"} <br />Date: {new Date(r.reservationDate).toLocaleDateString()}
-</p>
+            <p>{r.coworkingSpace?.name || "No name"} <br />Date: {r.reservationDate? new Date(r.reservationDate).toLocaleDateString(): "No date"}</p>
 
             <button onClick={() => handleDelete(r._id)}>
               Delete
