@@ -106,7 +106,7 @@ export default function Home() {
 
         <button
           onClick={() => router.push("/register")}
-          className="mt-10 bg-blue-900 text-white px-8 py-3 rounded-lg"
+          className="mt-10 bg-red-600 text-white px-8 py-3 rounded-lg"
         >
           Get Started
         </button>
